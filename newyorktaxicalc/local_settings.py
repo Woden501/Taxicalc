@@ -1,0 +1,6 @@
+#local_settings.py
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
