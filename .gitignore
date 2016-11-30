@@ -1,3 +1,4 @@
 taxicalcenv
 *.pyc
 .idea
+*.csv
