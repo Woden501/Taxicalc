@@ -4,12 +4,12 @@ from datetime import datetime
 BOROUGH_LATS = {'Manhattan': 40.7831, 'Bronx': 40.8448, 'Queens': 40.7282,
                 'Brooklyn': 40.6782, 'Staten': 40.5795}
 
-BOROUGH_LONS = {'Manhattan': 73.9712, 'Bronx': 73.8648, 'Queens': 73.7949,
-                'Brooklyn': 73.9442, 'Staten': 74.1502}
+BOROUGH_LONS = {'Manhattan': -73.9712, 'Bronx': -73.8648, 'Queens': -73.7949,
+                'Brooklyn': -73.9442, 'Staten': -74.1502}
 
 
 def get_time_data(value):
-    the_datetime = datetime.strptime(value, '%Y-%d-%m %H:%M:%S')
+    the_datetime = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
     year = the_datetime.strftime('%Y')
     month = the_datetime.strftime('%B')
     month_of_year = the_datetime.strftime('%m')
@@ -28,12 +28,15 @@ def get_time_data(value):
             'minute': minute, 'second': second}
 
 
-def has_nulls(row):
+def is_valid(row):
+    if len(row) is not 21:
+        return False
+
     for item in row:
         if item is None:
-            return True
+            return False
 
-    return False
+    return True
 
 
 def get_borough(latitude, longitude):

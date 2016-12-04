@@ -1,0 +1,24 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'driver/recent.css' %}" />
+
+<section>
+    <h3>These are the 100 most recent fares:</h3>
+    {% if recent_fare_list %}
+        <table>
+            <tr>
+                <th>Fare ID</th>
+                <th>Total Amount</th>
+            </tr>
+            {% for fare in recent_fare_list %}
+                <tr>
+                    <td>{{ fare.id }}</td>
+                    <td>${{ fare.additionalFareInfo.totalAmount }}</td>
+                </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        <p>/No fares are available.</p>
+    {% endif %}
+</section>

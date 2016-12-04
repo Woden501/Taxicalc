@@ -10,11 +10,11 @@ def index(request):
 
 def load(request):
     # with open('green_tripdata_2016-06.csv') as f:
-    with open('shortDataset.csv') as f:
+    with open('every100thSample.csv') as f:
         reader = csv.reader(f, delimiter=b",")
         header = next(reader)
         for row in reader:
-            if not loadHelper.has_nulls(row):
+            if loadHelper.is_valid(row):
                 pickup_location = models.TaxiLocation.objects.create(longitude=row[5], latitude=row[6],
                                                                      borough=loadHelper.get_borough(longitude=row[5],
                                                                                                     latitude=row[6]))
@@ -62,4 +62,4 @@ def load(request):
                                                additionalFareInfo=fare_info,
                                                farePickupTime=pickup_time,
                                                fareDropoffTime=dropoff_time,)
-    return HttpResponse("The data load has completed")
+    return HttpResponse("<!DOCTYPE html><html><body><h1>The data was loaded successfully!</h1></body></html>")
