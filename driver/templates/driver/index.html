@@ -1,6 +1,12 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'driver/recent.css' %}" />
+
 <h1>This is the information page available to drivers</h1>
 
 <h3>Please select what you would like to do</h3>
-<ol type="1">
+<ul>
     <li><a href="recent">View last 100 fares</a></li>
-</ol>
+    <li><a href="boroughs">View highest traffic borough</a></li>
+</ul>

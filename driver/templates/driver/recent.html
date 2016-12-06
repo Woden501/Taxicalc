@@ -13,7 +13,7 @@
             </tr>
             {% for fare in recent_fare_list %}
                 <tr>
-                    <td>{{ fare.id }}</td>
+                    <td><a href="/dataload/{{ fare.id }}/">{{ fare.id }}</a></td>
                     <td>${{ fare.additionalFareInfo.totalAmount }}</td>
                 </tr>
             {%  endfor %}

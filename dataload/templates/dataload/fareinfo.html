@@ -1,0 +1,38 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'dataload/fareinfo.css' %}" />
+
+<section>
+    <h2>Fare: {{ fare_info.id }}</h2>
+    <table>
+        <tr>
+            <th>Passenger Count</th>
+            <th>Distance</th>
+            <th>Type</th>
+            <th>Fare</th>
+            <th>Extra Charge</th>
+            <th>MTA Tax</th>
+            <th>Tip</th>
+            <th>Tolls</th>
+            <th>E-Hail Fee</th>
+            <th>Improvement Surcharge</th>
+            <th>Total Cost</th>
+            <th>Payment Type</th>
+        </tr>
+        <tr>
+            <td>{{ fare_info.passengerCount }}</td>
+            <td>{{ fare_info.tripDistance }}</td>
+            <td>{{ fare_info.tripType }}</td>
+            <td>${{ fare_info.fareAmount }}</td>
+            <td>${{ fare_info.extra }}</td>
+            <td>${{ fare_info.mtaTax }}</td>
+            <td>${{ fare_info.tipAmount }}</td>
+            <td>${{ fare_info.tollsAmount }}</td>
+            <td>{{ fare_info.ehailFee }}</td>
+            <td>${{ fare_info.improvementSurcharge }}</td>
+            <td>${{ fare_info.totalAmount }}</td>
+            <td>{{ fare_info.paymentType }}</td>
+        </tr>
+    </table>
+</section>

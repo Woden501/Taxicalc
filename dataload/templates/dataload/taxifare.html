@@ -1,0 +1,30 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'dataload/taxifare.css' %}" />
+
+<section>
+    <h2>Taxi Fare: {{ taxi_fare.id }}</h2>
+    <table>
+        <tr>
+            <th>Pickup Time</th>
+            <th>Pickup Location</th>
+            <th>Dropoff Time</th>
+            <th>Dropoff Location</th>
+            <th>Vendor</th>
+            <th>Store and Forward?</th>
+            <th>Rate Code</th>
+            <th>Fare Information</th>
+        </tr>
+        <tr>
+            <td>{{ taxi_fare.fare_pickup_time.taxi_date }}</td>
+            <td>{{ taxi_fare.fare_pickup_location.latitude }}°, {{ taxi_fare.fare_pickup_location.longitude }}°, {{ taxi_fare.farePickupLocation.borough }}</td>
+            <td>{{ taxi_fare.fare_dropoff_time.taxi_date }}</td>
+            <td>{{ taxi_fare.fare_dropoff_location.latitude }}°, {{ taxi_fare.fareDropoffLocation.longitude }}°, {{ taxi_fare.fareDropoffLocation.borough }}</td>
+            <td>{{ taxi_fare.vendor_info.vendor_name }}</td>
+            <td>{{ taxi_fare.store_and_forward_info.store_and_fwd_flag }}</td>
+            <td>{{ taxi_fare.rate_code_info.rate_type }}</td>
+            <td><a href="/dataload/fareinfo/{{ taxi_fare.additional_fare_info.id }}">{{ taxi_fare.additional_fare_info.id }}</a></td>
+        </tr>
+    </table>
+</section>

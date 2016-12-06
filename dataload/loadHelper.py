@@ -8,6 +8,46 @@ BOROUGH_LONS = {'Manhattan': -73.9712, 'Bronx': -73.8648, 'Queens': -73.7949,
                 'Brooklyn': -73.9442, 'Staten': -74.1502}
 
 
+def get_vendor_name(vendor_id):
+    vendor_int = int(vendor_id)
+    if vendor_int is 1:
+        vendor_name = 'Creative Mobile Technologies'
+    elif vendor_int is 2:
+        vendor_name = 'VeriFone Inc.'
+    else:
+        vendor_name = 'Unknown'
+    return vendor_name
+
+
+def get_fare_data(trip_type_id, payment_type_id):
+    trip_type_int = int(trip_type_id)
+    payment_type_int = int(payment_type_id)
+
+    if trip_type_int is 1:
+        trip_type = 'street-hail'
+    elif trip_type_int is 2:
+        trip_type = 'dispatch'
+    else:
+        trip_type = 'unknown'
+
+    if payment_type_int is 1:
+        payment_type = 'credit card'
+    elif payment_type_int is 2:
+        payment_type = 'cash'
+    elif payment_type_int is 3:
+        payment_type = 'no charge'
+    elif payment_type_int is 4:
+        payment_type = 'dispute'
+    elif payment_type_int is 5:
+        payment_type = 'unknown'
+    elif payment_type_int is 6:
+        payment_type = 'voided trip'
+    else:
+        payment_type = 'unknown'
+
+    return {'trip_type': trip_type, 'payment_type': payment_type}
+
+
 def get_time_data(value):
     the_datetime = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
     year = the_datetime.strftime('%Y')
@@ -62,16 +102,23 @@ def find_nearest(the_dictionary, the_value):
     return smallest_key
 
 
-def find_rate_type(rate_code_id):
+def find_rate_info(rate_code_id):
     rate_value = int(rate_code_id)
     if rate_value is 1:
-        return 'standard'
-    elif rate_value is 2 or rate_value is 3 or rate_value is 4:
-        return 'location'
-    elif rate_value is 5 or rate_value is 6:
-        return 'other'
+        info = {'group': 'standard', 'type': 'standard'}
+    elif rate_value is 2:
+        info = {'group': 'location', 'type': 'JFK'}
+    elif rate_value is 3:
+        info = {'group': 'location', 'type': 'Newark'}
+    elif rate_value is 4:
+        info = {'group': 'location', 'type': 'Nassau or Westchester'}
+    elif rate_value is 5:
+        info = {'group': 'other', 'type': 'negotiated fare'}
+    elif rate_value is 6:
+        info = {'group': 'other', 'type': 'group ride'}
     else:
-        return 'unknown'
+        info = {'group': 'unknown', 'type': 'unknown'}
+    return info
 
 
 # def find_time_info():
