@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from decimal import Decimal
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from dataload.models import TaxiFare
 from django.db import connection
 
@@ -42,136 +42,61 @@ def boroughs(request):
     return render(request, 'driver/boroughs.html', {'ordered_counts': ordered_counts})
 
 
-def average_borough_fare(request):
-    cursor = connection.cursor()
+def average_borough_fare(request, borough):
 
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Manhattan' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22")
-    man_22_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Manhattan' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23")
-    man_23_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Manhattan' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24")
-    man_24_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Manhattan' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25")
-    man_25_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Manhattan' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26")
-    man_26_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
+    if borough in ['Manhattan', 'Bronx', 'Queens', 'Brooklyn', 'Staten']:
+        cursor = connection.cursor()
 
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Bronx' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22")
-    bron_22_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Bronx' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23")
-    bron_23_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Bronx' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24")
-    bron_24_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Bronx' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25")
-    bron_25_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Bronx' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26")
-    bron_26_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
+        cursor.execute(
+            "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = %s and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22", [borough])
+        avg_22 = Decimal(format(cursor.fetchone()[0], '.2f'))
+        cursor.execute(
+            "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = %s and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23", [borough])
+        avg_23 = Decimal(format(cursor.fetchone()[0], '.2f'))
+        cursor.execute(
+            "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = %s and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24", [borough])
+        avg_24 = Decimal(format(cursor.fetchone()[0], '.2f'))
+        cursor.execute(
+            "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = %s and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25", [borough])
+        avg_25 = Decimal(format(cursor.fetchone()[0], '.2f'))
+        cursor.execute(
+            "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = %s and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26", [borough])
+        avg_26 = Decimal(format(cursor.fetchone()[0], '.2f'))
 
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Queens' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22")
-    que_22_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Queens' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23")
-    que_23_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Queens' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24")
-    que_24_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Queens' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25")
-    que_25_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Queens' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26")
-    que_26_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
+        weeks = {'22': avg_22, '23': avg_23, '24': avg_24, '25': avg_25, '26': avg_26}
 
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Brooklyn' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22")
-    brook_22_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Brooklyn' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23")
-    brook_23_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Brooklyn' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24")
-    brook_24_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Brooklyn' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25")
-    brook_25_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Brooklyn' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26")
-    brook_26_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
+        ordered_weeks = collections.OrderedDict(sorted(weeks.items()))
 
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Staten' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 22")
-    sta_22_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Staten' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 23")
-    sta_23_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Staten' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 24")
-    sta_24_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Staten' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 25")
-    sta_25_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
-    cursor.execute(
-        "select avg(d.fare_amount) from dataload_taxifare a, dataload_taxilocation b, dataload_taxidatetime c, dataload_fareinfo d where b.borough = 'Staten' and a.fare_pickup_location_id = b.id and a.additional_fare_info_id = d.id and a.fare_pickup_time_id = c.id and c.week_of_year = 26")
-    sta_26_avg = Decimal(format(cursor.fetchone()[0], '.2f'))
+        average = {'borough': borough, 'weeks': ordered_weeks}
 
-    man_weeks = {'22': man_22_avg, '23': man_23_avg, '24': man_24_avg, '25': man_25_avg, '26': man_26_avg}
-    bron_weeks = {'22': bron_22_avg, '23': bron_23_avg, '24': bron_24_avg, '25': bron_25_avg, '26': bron_26_avg}
-    que_weeks = {'22': que_22_avg, '23': que_23_avg, '24': que_24_avg, '25': que_25_avg, '26': que_26_avg}
-    brook_weeks = {'22': brook_22_avg, '23': brook_23_avg, '24': brook_24_avg, '25': brook_25_avg, '26': brook_26_avg}
-    sta_weeks = {'22': sta_22_avg, '23': sta_23_avg, '24': sta_24_avg, '25': sta_25_avg, '26': sta_26_avg}
-
-    man_ordered_weeks = collections.OrderedDict(sorted(man_weeks.items()))
-    bron_ordered_weeks = collections.OrderedDict(sorted(bron_weeks.items()))
-    que_ordered_weeks = collections.OrderedDict(sorted(que_weeks.items()))
-    brook_ordered_weeks = collections.OrderedDict(sorted(brook_weeks.items()))
-    sta_ordered_weeks = collections.OrderedDict(sorted(sta_weeks.items()))
-
-    averages = {
-                    'Manhattan': man_ordered_weeks,
-                    'Bronx': bron_ordered_weeks,
-                    'Queens': que_ordered_weeks,
-                    'Brooklyn': brook_ordered_weeks,
-                    'Staten': sta_ordered_weeks
-                }
-    ordered_averages = collections.OrderedDict(sorted(averages.items()))
-
-    return render(request, 'driver/boroughs_average.html', {'averages': ordered_averages})
+        return render(request, 'driver/borough_average.html', {'average': average})
+    else:
+        raise Http404("Taxi Fare does not exist")
 
 
 def best_day(request):
     cursor = connection.cursor()
 
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Sunday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Sunday' and c.week_of_year = 23")
     sunday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Monday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Monday' and c.week_of_year = 23")
     monday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Tuesday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Tuesday' and c.week_of_year = 23")
     tuesday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Wednesday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Wednesday' and c.week_of_year = 23")
     wednesday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Thursday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Thursday' and c.week_of_year = 23")
     thursday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Friday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Friday' and c.week_of_year = 23")
     friday_total = cursor.fetchone()[0]
     cursor.execute(
-        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Saturday'")
+        "select sum(b.fare_amount) from dataload_taxifare a, dataload_fareinfo b, dataload_taxidatetime c where a.additional_fare_info_id = b.id and a.fare_pickup_time_id = c.id and c.day = 'Saturday' and c.week_of_year = 23")
     saturday_total = cursor.fetchone()[0]
 
     day_totals = {'Sunday': sunday_total, 'Monday': monday_total, 'Tuesday': tuesday_total,

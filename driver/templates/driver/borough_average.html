@@ -1,0 +1,24 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'driver/boroughs.css' %}" />
+
+<section>
+    {% if average %}
+        <h3>This is the average fare information for {{ average.borough }} per week:</h3>
+        {% for week, average in average.weeks.items %}
+            <table>
+                <tr>
+                    <th>Week</th>
+                    <th>Average Fare</th>
+                </tr>
+                <tr>
+                    <td>{{ week }}</td>
+                    <td>${{ average }}</td>
+                </tr>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>The info is not available</p>
+    {% endif %}
+</section>

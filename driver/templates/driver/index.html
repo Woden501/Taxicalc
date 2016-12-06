@@ -3,10 +3,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'driver/recent.css' %}" />
 
-<h1>This is the information page available to drivers</h1>
+<h1>New York City Green Taxi Info</h1>
 
-<h3>Please select what you would like to do</h3>
+<b>Please select what you would like to view:</b>
 <ul>
     <li><a href="recent">View last 100 fares</a></li>
-    <li><a href="boroughs">View highest traffic borough</a></li>
+    <li><a href="boroughs">View all time highest traffic borough</a></li>
+    <li><a href="borough/average">View the average fare for each borough by week (ROLL UP)</a></li>
+    <li><a href="day">View the fare totals for each day of week 23 (DRILL DOWN)</a></li>
 </ul>
