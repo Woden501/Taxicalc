@@ -4,8 +4,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'driver/boroughs.css' %}" />
 
 <section>
-    <h3>This is the total fare value for each day of week 23:</h3>
-    {% if ordered_totals %}
+    <h3>This is the total fare value for each day of week {{ week }}:</h3>
+    {% if days %}
         <table>
             <tr>
                 <th>Day</th>
@@ -13,31 +13,31 @@
             </tr>
             <tr>
                 <td>Sunday</td>
-                <td>${{ ordered_totals.Sunday }}</td>
+                <td>${{ days.Sunday }}</td>
             </tr>
             <tr>
                 <td>Monday</td>
-                <td>${{ ordered_totals.Monday }}</td>
+                <td>${{ days.Monday }}</td>
             </tr>
             <tr>
                 <td>Tuesday</td>
-                <td>${{ ordered_totals.Tuesday }}</td>
+                <td>${{ days.Tuesday }}</td>
             </tr>
             <tr>
                 <td>Wednesday</td>
-                <td>${{ ordered_totals.Wednesday }}</td>
+                <td>${{ days.Wednesday }}</td>
             </tr>
             <tr>
                 <td>Thursday</td>
-                <td>${{ ordered_totals.Thursday }}</td>
+                <td>${{ days.Thursday }}</td>
             </tr>
             <tr>
                 <td>Friday</td>
-                <td>${{ ordered_totals.Friday }}</td>
+                <td>${{ days.Friday }}</td>
             </tr>
             <tr>
                 <td>Saturday</td>
-                <td>${{ ordered_totals.Saturday }}</td>
+                <td>${{ days.Saturday }}</td>
             </tr>
         </table>
     {% else %}

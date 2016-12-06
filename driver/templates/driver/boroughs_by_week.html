@@ -1,0 +1,24 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'driver/taxicalc.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'driver/boroughs.css' %}" />
+
+<section>
+    <h3>This is the ordered list of most pickups by borough for week {{ week }}:</h3>
+    {% if ordered_counts %}
+        <table>
+            <tr>
+                <th>Borough</th>
+                <th>Pickups</th>
+            </tr>
+            {% for borough, count in ordered_counts %}
+                <tr>
+                    <td>{{ borough }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+            {%  endfor %}
+        </table>
+    {% else %}
+        <p>The info is not available</p>
+    {% endif %}
+</section>
